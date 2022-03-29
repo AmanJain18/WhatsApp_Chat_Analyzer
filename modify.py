@@ -33,7 +33,7 @@ def most_active_users(df):
 
 
 def create_word(selected_user, df):
-    f = open('stop_hinglish.txt', 'r')
+    f = open('StopWords.txt', 'r')
     stop_words = f.read()
 
     if selected_user != 'Overall':
@@ -63,7 +63,7 @@ def create_word(selected_user, df):
 
 
 def most_common_words(selected_user, df):
-    f = open('stop_hinglish.txt', 'r')
+    f = open('StopWords.txt', 'r')
     stop_words = f.read()
 
     if selected_user != 'Overall':
