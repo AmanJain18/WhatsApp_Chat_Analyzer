@@ -23,11 +23,7 @@ def fetch_stats(selected_user, df):
     for message in df['message']:
         links.extend(extract.find_urls(message))
 
-    user_list = df['user'].unique().tolist()
-    user_list.remove('group_notification')
-    user_list.sort()
-
-    return len(user_list), tol_messages, len(words), media_msg, len(links)
+    return  tol_messages, len(words), media_msg, len(links)
 
 
 def most_active_users(df):
@@ -35,6 +31,13 @@ def most_active_users(df):
     df = round((df['user'].value_counts() / df.shape[0]) * 100, 2).reset_index().rename(
         columns={'index': 'Name', 'user': 'Contribution %'})
     return x, df
+
+
+def total_users(df):
+    user_list = df['user'].unique().tolist()
+    user_list.remove('group_notification')
+    user_list.sort()
+    return len(user_list)
 
 
 def most_media_contributor(df):
