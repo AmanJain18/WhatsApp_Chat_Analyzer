@@ -21,28 +21,27 @@ if uploaded_file is not None:
 
     if st.sidebar.button("Show Analysis"):
         st.title('Top Statistics')
+        if selected_user == 'Overall':
+            tol_users = modify.total_users(df)
+            st.header("Total Users in Groups: " + str(tol_users))
 
-        tol_users, tol_messages, words, media_msg, tol_links = modify.fetch_stats(selected_user, df)
+        tol_messages, words, media_msg, tol_links = modify.fetch_stats(selected_user, df)
 
-        col1, col2, col3, col4, col5 = st.columns(5)
+        col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            st.header("Total Users")
-            st.title(tol_users)
-
-        with col2:
             st.header("Total Messages")
             st.title(tol_messages)
 
-        with col3:
+        with col2:
             st.header("Total Words")
             st.title(words)
-        with col4:
 
+        with col3:
             st.header("Total Media Shared")
             st.title(media_msg)
 
-        with col5:
+        with col4:
             st.header("Total Links Shared")
             st.title(tol_links)
 
