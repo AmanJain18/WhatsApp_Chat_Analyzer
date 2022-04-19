@@ -3,6 +3,7 @@ from wordcloud import WordCloud, STOPWORDS
 import pandas as pd
 from collections import Counter
 import emoji
+import numpy as np
 
 extract = URLExtract()
 
@@ -22,7 +23,11 @@ def fetch_stats(selected_user, df):
     for message in df['message']:
         links.extend(extract.find_urls(message))
 
-    return tol_messages, len(words), media_msg, len(links)
+    user_list = df['user'].unique().tolist()
+    user_list.remove('group_notification')
+    user_list.sort()
+
+    return len(user_list), tol_messages, len(words), media_msg, len(links)
 
 
 def most_active_users(df):
@@ -32,8 +37,16 @@ def most_active_users(df):
     return x, df
 
 
+def most_media_contributor(df):
+    mm = df[df['message'] == '<Media omitted>\n']
+    mm1 = mm['user'].value_counts().head(10)
+    df = round((mm['user'].value_counts().head(10) / mm.shape[0]) * 100, 2).reset_index().rename(
+        columns={'index': 'Name', 'user': 'Media Contribution %'})
+    return mm1, df
+
+
 def create_word(selected_user, df):
-    f = open('StopWords.txt', 'r')
+    f = open('stop_hinglish.txt', 'r')
     stop_words = f.read()
 
     if selected_user != 'Overall':
@@ -63,7 +76,7 @@ def create_word(selected_user, df):
 
 
 def most_common_words(selected_user, df):
-    f = open('StopWords.txt', 'r')
+    f = open('stop_hinglish.txt', 'r')
     stop_words = f.read()
 
     if selected_user != 'Overall':
@@ -94,6 +107,16 @@ def all_emoji(selected_user, df):
     emoji_df = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
 
     return emoji_df
+
+
+def words_per_message(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    wpm = (np.sum(df['Word\'s']))/df.shape[0]
+    w_p_m = ("%.3f" % round(wpm, 2))
+
+    return w_p_m
 
 
 def monthly_timeline(selected_user, df):

@@ -22,21 +22,27 @@ if uploaded_file is not None:
     if st.sidebar.button("Show Analysis"):
         st.title('Top Statistics')
 
-        tol_messages, words, media_msg, tol_links = modify.fetch_stats(selected_user, df)
+        tol_users, tol_messages, words, media_msg, tol_links = modify.fetch_stats(selected_user, df)
 
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
 
         with col1:
+            st.header("Total Users")
+            st.title(tol_users)
+
+        with col2:
             st.header("Total Messages")
             st.title(tol_messages)
 
-        with col2:
+        with col3:
             st.header("Total Words")
             st.title(words)
-        with col3:
+        with col4:
+
             st.header("Total Media Shared")
             st.title(media_msg)
-        with col4:
+
+        with col5:
             st.header("Total Links Shared")
             st.title(tol_links)
 
@@ -92,6 +98,24 @@ if uploaded_file is not None:
             with col1:
                 ax.bar(x.index, x.values, color='#575FE8')
                 plt.xticks(rotation='vertical')
+                plt.xlabel('Users')
+                plt.ylabel('No. of messages')
+                st.pyplot(fig)
+            with col2:
+                st.dataframe(new_df)
+
+        if selected_user == 'Overall':
+            st.title('Top-10 media contributor of Group')
+            x, new_df = modify.most_media_contributor(df)
+            fig, ax = plt.subplots()
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                ax.bar(x.index, x.values, color='#79a832')
+                plt.xticks(rotation='vertical')
+                plt.xlabel('Users')
+                plt.ylabel('No. of media')
                 st.pyplot(fig)
             with col2:
                 st.dataframe(new_df)
@@ -110,6 +134,10 @@ if uploaded_file is not None:
         plt.xticks(rotation='vertical')
         st.title('Most Common Words')
         st.pyplot(fig)
+
+        wpm = modify.words_per_message(selected_user, df)
+        st.title('Average Words per Message')
+        st.header(wpm)
 
         emoji_df = modify.all_emoji(selected_user, df)
         st.title("Emoji's Analysis")

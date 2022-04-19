@@ -26,6 +26,8 @@ def preprocess(data):
     df['user'] = users
     df['message'] = messages
     df.drop(columns=['u_msg'], inplace=True)
+    df['Letter\'s'] = df['message'].apply(lambda s: len(s))
+    df['Word\'s'] = df['message'].apply(lambda s: len(s.split(' ')))
     df['Date_num'] = pd.DatetimeIndex(df['date']).date
     df['year'] = pd.DatetimeIndex(df['date']).year
     df['month'] = pd.DatetimeIndex(df['date']).month_name()
